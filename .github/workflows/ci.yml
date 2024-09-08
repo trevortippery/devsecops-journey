@@ -1,12 +1,10 @@
 name: Update Gantt Chart
 
-# Run the workflow on every push to the main branch or at a set schedule
+# Run the workflow on every push to the main branch
 on:
   push:
     branches:
       - main
-  schedule:
-    - cron: "0 0 * * *"  # Runs every day at midnight
 
 jobs:
   update-gantt:
@@ -30,8 +28,12 @@ jobs:
         source venv/bin/activate
         pip install -r requirements.txt  # Ensure this file lists requests and other dependencies
 
-    # Step 4: Run your Python script (diagram.py)
+    # Step 4: Run Python script to update diagram on push (diagram.py)
     - name: Run Python script to update Gantt chart
+      env:
+        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        JIRA_PROJECT: ${{ secrets.JIRA_PROJECT }}
       run: |
         source venv/bin/activate
         python diagram.py
